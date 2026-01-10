@@ -25,6 +25,7 @@
       --radius: 18px;
 
       --maxw: 1180px;
+      --sidebar-w: 240px;
     }
 
     @media (max-width: 720px){
@@ -108,8 +109,99 @@
       padding: 0 16px;
     }
 
+    /* Layout: sidebar left + content right */
+    .layout{
+      display:grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px){
+      .layout{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar (filters) */
+    aside.sidebar{
+      position: sticky;
+      top: 14px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 860px){
+      aside.sidebar{
+        position: static;
+      }
+    }
+
+    .sidebar h2{
+      margin: 0 0 10px;
+      font-size: 12px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+    }
+
+    .filter-group{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.14);
+    }
+
+    .filter-label{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
+      margin-top: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .filter-label:hover{
+      background: rgba(255,255,255,.10);
+    }
+
+    .filter-label input{
+      width: 16px;
+      height: 16px;
+      accent-color: rgba(255,255,255,.85);
+    }
+
+    .filter-meta{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .link-btn{
+      appearance:none;
+      border:none;
+      background: transparent;
+      color: rgba(255,255,255,.80);
+      text-decoration: underline;
+      cursor:pointer;
+      padding: 0;
+      font-size: 12px;
+    }
+    .link-btn:hover{ color: rgba(255,255,255,.92); }
+
+    /* Sections */
     .section{
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
     .section-head{
@@ -270,27 +362,59 @@
     </div>
   </header>
 
-  <main id="content"></main>
+  <main>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Filtres">
+        <h2>Filtres</h2>
+
+        <div class="filter-group" aria-label="Filtre par langue">
+          <div style="font-size:12px;color:var(--muted);">Langue</div>
+
+          <label class="filter-label">
+            <input id="lang-en" type="checkbox" checked />
+            <span>Anglais</span>
+          </label>
+
+          <label class="filter-label">
+            <input id="lang-jp" type="checkbox" checked />
+            <span>Japonais</span>
+          </label>
+
+          <label class="filter-label">
+            <input id="lang-neutral" type="checkbox" checked />
+            <span>Neutre</span>
+          </label>
+
+          <div class="filter-meta">
+            <span id="filter-status">Toutes les langues</span>
+            <button id="reset-filters" class="link-btn" type="button">Réinitialiser</button>
+          </div>
+        </div>
+      </aside>
+
+      <div id="content" aria-label="Contenu"></div>
+    </div>
+  </main>
 
   <script>
-    // Catégories / sections (ordre d’affichage)
+    // Sections (ordre d’affichage)
     const CATEGORIES = [
       { key: "sites",    title: "Sites",     subtitle: "Guides, wikis, tools" },
       { key: "docs",     title: "Documents", subtitle: "Google Sheets / Docs" },
       { key: "youtube",  title: "YouTube",   subtitle: "Chaînes & playlists (à compléter)" },
     ];
 
-    // Données
-    // - category: "sites" | "docs" | "youtube"
-    // - tags: utilisés par la recherche (pas affichés)
-    // - note: info courte en tooltip (title)
-    // - quick: liens rapides (max 3 affichés)
+    // Langues gérées par le filtre
+    // - en: anglais
+    // - jp: japonais
+    // - neutral: neutre (docs, ressources multi-langues, etc.)
     const RESOURCES = [
       // =====================
       // Sites (Anglophone / JP)
       // =====================
       {
         category: "sites",
+        lang: "en",
         name: "Gametora",
         homeUrl: "https://gametora.com/umamusume",
         tags: ["anglais", "en", "global", "guides", "tiers", "meta", "build"],
@@ -299,6 +423,7 @@
       },
       {
         category: "sites",
+        lang: "en",
         name: "Umamusu Wiki",
         homeUrl: "https://umamusu.wiki/Main_Page",
         tags: ["anglais", "en", "wiki", "database", "guides"],
@@ -306,6 +431,7 @@
       },
       {
         category: "sites",
+        lang: "en",
         name: "Race Simulator (Umalator)",
         homeUrl: "https://alpha123.github.io/uma-tools/umalator-global/#H4sIAAAAAAAACtWPTWrDMBCF7%2FLWWshuG4J2WZZuClmWLIQ1dkUsyWhGmBJ89zJJSmlu0N33huH9XDCUVpleA1xne%2FtkkNmnZSaGe7HWoDG9F34jWuCkNjKofqBAI9wFqZQA1xtMtbSsHgYrefmkemUmzyVfUWKi%2B6sPpGl2M2jJd2pUmoxRtAU6a3e2gwEvRGrZaw0Wn2L2P3Ipq0bslacmDPesuEYOJd0FS%2FVC0xccjpTPpcEgRBafBzosEqVpDxw1qtXR%2F7ke8GvweD7HeWa4D61qdx1OtyH9w5D%2FMOG0bd8LhbFRAwIAAA%3D%3D",
         tags: ["anglais", "en", "simulateur", "race", "compare", "global", "tools"],
@@ -314,6 +440,7 @@
       },
       {
         category: "sites",
+        lang: "en",
         name: "Uma Musume DB (Pure DB)",
         homeUrl: "https://uma-global.pure-db.com/#/search",
         tags: ["anglais", "en", "database", "friends", "supports", "global"],
@@ -322,6 +449,16 @@
       },
       {
         category: "sites",
+        lang: "en",
+        name: "Chronogenesis",
+        homeUrl: "https://chronogenesis.net/",
+        tags: ["anglais", "en", "friends", "supports", "club", "stats", "search", "global"],
+        note: "Recherche avancée (amis/supports) + stats de clubs.",
+        quick: []
+      },
+      {
+        category: "sites",
+        lang: "jp",
         name: "Kamigame (Global)",
         homeUrl: "https://kamigame.jp/umamusume/page/380240391003208403.html",
         tags: ["japonais", "jp", "global", "guides", "tiers"],
@@ -330,6 +467,7 @@
       },
       {
         category: "sites",
+        lang: "jp",
         name: "UmaSim (mee1080)",
         homeUrl: "https://mee1080.github.io/umasim/",
         tags: ["japonais", "jp", "simulateur", "training", "tools"],
@@ -339,6 +477,7 @@
       },
       {
         category: "sites",
+        lang: "jp",
         name: "GameWith",
         homeUrl: "https://gamewith.jp/uma-musume",
         tags: ["japonais", "jp", "guides", "wiki"],
@@ -346,6 +485,7 @@
       },
       {
         category: "sites",
+        lang: "jp",
         name: "攻略.tools",
         homeUrl: "https://ウマ娘.攻略.tools",
         tags: ["japonais", "jp", "tools", "rankings"],
@@ -355,6 +495,7 @@
       },
       {
         category: "sites",
+        lang: "jp",
         name: "Game8",
         homeUrl: "https://game8.jp/umamusume",
         tags: ["japonais", "jp", "guides", "wiki"],
@@ -362,10 +503,11 @@
       },
 
       // =====================
-      // Documents (Google)
+      // Documents (Google) — neutre par défaut
       // =====================
       {
         category: "docs",
+        lang: "neutral",
         name: "Google Sheet #1",
         homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
         tags: ["google", "sheet", "spreadsheet", "guide"],
@@ -373,6 +515,7 @@
       },
       {
         category: "docs",
+        lang: "neutral",
         name: "Google Sheet #2 (pub)",
         homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
         tags: ["google", "sheet", "spreadsheet", "guide", "public"],
@@ -380,6 +523,7 @@
       },
       {
         category: "docs",
+        lang: "neutral",
         name: "Google Doc #1",
         homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
         tags: ["google", "doc", "document", "guide"],
@@ -387,6 +531,7 @@
       },
       {
         category: "docs",
+        lang: "neutral",
         name: "Google Sheet #3",
         homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
         tags: ["google", "sheet", "spreadsheet", "guide"],
@@ -394,6 +539,7 @@
       },
       {
         category: "docs",
+        lang: "neutral",
         name: "Google Doc #2",
         homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
         tags: ["google", "doc", "document", "guide"],
@@ -401,11 +547,12 @@
       },
 
       // =====================
-      // YouTube (à compléter)
+      // YouTube (à compléter) — neutre par défaut
       // =====================
-      // Exemple (à activer plus tard) :
+      // Exemple :
       // {
       //   category: "youtube",
+      //   lang: "neutral",
       //   name: "Chaîne Exemple",
       //   homeUrl: "https://www.youtube.com/@exemple",
       //   tags: ["youtube", "videos", "guides"],
@@ -418,6 +565,12 @@
 
     const content = document.getElementById("content");
     const q = document.getElementById("q");
+
+    const langEn = document.getElementById("lang-en");
+    const langJp = document.getElementById("lang-jp");
+    const langNeutral = document.getElementById("lang-neutral");
+    const resetBtn = document.getElementById("reset-filters");
+    const filterStatus = document.getElementById("filter-status");
 
     function safeUrl(u){
       try { return new URL(u).toString(); } catch { return null; }
@@ -448,6 +601,36 @@
         .filter(Boolean);
     }
 
+    function getActiveLangs(){
+      const active = new Set();
+      if (langEn.checked) active.add("en");
+      if (langJp.checked) active.add("jp");
+      if (langNeutral.checked) active.add("neutral");
+      return active;
+    }
+
+    function updateFilterStatus(){
+      const active = getActiveLangs();
+      if (active.size === 3) {
+        filterStatus.textContent = "Toutes les langues";
+        return;
+      }
+      if (active.size === 0) {
+        filterStatus.textContent = "Aucune langue";
+        return;
+      }
+      const labels = [];
+      if (active.has("en")) labels.push("Anglais");
+      if (active.has("jp")) labels.push("Japonais");
+      if (active.has("neutral")) labels.push("Neutre");
+      filterStatus.textContent = labels.join(" + ");
+    }
+
+    function langAllowed(item, activeLangs){
+      const lang = (item.lang || "neutral").toLowerCase();
+      return activeLangs.has(lang);
+    }
+
     function matches(item, term){
       const t = term.trim().toLowerCase();
       if (!t) return true;
@@ -462,16 +645,17 @@
       });
 
       const tagsMatch = normalizeTags(item.tags).some(tag => tag.includes(t));
-
       return nameMatch || urlMatch || quickMatch || tagsMatch;
     }
 
     function render(term=""){
       content.innerHTML = "";
+      const activeLangs = getActiveLangs();
 
       for (const cat of CATEGORIES){
         const items = RESOURCES
           .filter(r => r.category === cat.key)
+          .filter(r => langAllowed(r, activeLangs))
           .filter(r => matches(r, term));
 
         const section = document.createElement("section");
@@ -583,8 +767,28 @@
       }
     }
 
-    q.addEventListener("input", () => render(q.value));
-    render("");
+    function rerender(){
+      updateFilterStatus();
+      render(q.value);
+    }
+
+    // Events
+    q.addEventListener("input", rerender);
+    langEn.addEventListener("change", rerender);
+    langJp.addEventListener("change", rerender);
+    langNeutral.addEventListener("change", rerender);
+
+    resetBtn.addEventListener("click", () => {
+      langEn.checked = true;
+      langJp.checked = true;
+      langNeutral.checked = true;
+      q.value = "";
+      rerender();
+      q.focus();
+    });
+
+    // Init
+    rerender();
   </script>
 </body>
 </html>
