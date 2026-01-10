@@ -535,15 +535,16 @@
       const active = new Set();
       if (langEn.checked) active.add("en");
       if (langJp.checked) active.add("jp");
+      if (langJp.checked) active.add("fr");
       return active;
     }
 
     function updateFilterStatus(){
       const active = getActiveLangs();
       const langText =
-        active.size === 2 ? "Toutes les langues" :
+        active.size === 3 ? "Toutes les langues" :
         active.size === 0 ? "Aucune langue" :
-        active.has("en") ? "Anglais" : "Japonais";
+        active.has("en") ? "Anglais" : "Japonais" : "français";
 
       filterStatus.textContent = newPlayer.checked
         ? `${langText} · Nouveau joueur`
@@ -715,11 +716,13 @@
     newPlayer.addEventListener("change", rerender);
     langEn.addEventListener("change", rerender);
     langJp.addEventListener("change", rerender);
+    langFr.addEventListener("change", rerender);
 
     resetBtn.addEventListener("click", () => {
       newPlayer.checked = false;
       langEn.checked = true;
       langJp.checked = true;
+      langFr.checked = true;
       q.value = "";
       rerender();
       q.focus();
