@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Uma Musume NavHub</title>
+
+  <style>
+    :root{
+      /* Background images (desktop/mobile) */
+      --bg-img-desktop: url("https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3224770/header.jpg?t=1765520190");
+      --bg-img-mobile:  url("https://umamusume.com/_app/immutable/assets/kv.95F8Qc_S.png");
+      --bg-img: var(--bg-img-desktop);
+
+      /* Theme */
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+
+      /* Clear glass */
+      --glass:  rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.08);
+      --hover:  rgba(255,255,255,.14);
+
+      --shadow: 0 14px 40px rgba(0,0,0,.42);
+      --radius: 18px;
+
+      --maxw: 1180px;
+    }
+
+    @media (max-width: 720px){
+      :root{ --bg-img: var(--bg-img-mobile); }
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Blurred background layer */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background-image: var(--bg-img);
+      background-size: cover;
+      background-position: center;
+      filter: blur(14px);
+      transform: scale(1.06);
+      z-index: -2;
+    }
+
+    /* Dark/contrast overlay */
+    body::after{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1200px 700px at 20% 0%, rgba(0,0,0,.25), transparent 60%),
+        radial-gradient(900px 600px at 80% 10%, rgba(0,0,0,.22), transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.70));
+      z-index: -1;
+    }
+
+    header{
+      max-width: var(--maxw);
+      margin: 22px auto 10px;
+      padding: 0 16px;
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+      text-shadow: 0 10px 22px rgba(0,0,0,.35);
+    }
+
+    .search-wrap{
+      width: 100%;
+      display:flex;
+      justify-content:center;
+    }
+
+    .search{
+      width: min(620px, 100%);
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: none;
+      outline: none;
+      color: var(--text);
+      background: var(--glass2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .search::placeholder{ color: rgba(255,255,255,.55); }
+
+    main{
+      max-width: var(--maxw);
+      margin: 10px auto 44px;
+      padding: 0 16px;
+    }
+
+    /* Grid bounded => 1 résultat ne s’étire pas */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 270px));
+      gap: 16px;
+      align-items: start;
+      justify-content: center;
+    }
+
+    /* Mobile: 2 colonnes si possible, sinon 1 */
+    @media (max-width: 520px){
+      .grid{
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        justify-content: stretch;
+      }
+    }
+
+    .tile{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .main-btn{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      padding: 16px 14px;
+      border-radius: var(--radius);
+      text-decoration:none;
+      color: var(--text);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+
+      transition: transform .10s ease, background .12s ease;
+    }
+
+    .main-btn:hover{
+      background: var(--hover);
+      transform: translateY(-1px);
+    }
+
+    .icon{
+      width:64px;
+      height:64px;
+      border-radius: 18px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+
+    .icon img{
+      width: 72%;
+      height: 72%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
+    }
+
+    .name{
+      font-size: 14px;
+      font-weight: 650;
+      text-align:center;
+      line-height: 1.2;
+    }
+
+    .quick{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:8px;
+    }
+
+    .quick a{
+      display:block;
+      text-align:center;
+      font-size:12px;
+      padding: 8px 8px;
+      border-radius: 12px;
+      text-decoration:none;
+      color: var(--text);
+
+      background: rgba(255,255,255,.09);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      transition: background .12s ease, transform .10s ease;
+    }
+
+    .quick a:hover{
+      background: rgba(255,255,255,.14);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Uma Musume NavHub</h1>
+    <div class="search-wrap">
+      <input id="q" class="search" type="search" placeholder="Rechercher (site, tag, lien)..." autocomplete="off" />
+    </div>
+  </header>
+
+  <main>
+    <section id="grid" class="grid" aria-label="Raccourcis"></section>
+  </main>
+
+  <script>
+    // Données
+    // - tags: utilisés par la recherche (pas affichés)
+    // - note: info courte en tooltip (title)
+    // - quick: liens rapides (max 3 affichés)
+    const SITES = [
+      // Anglophone
+      {
+        name: "Gametora",
+        homeUrl: "https://gametora.com/umamusume",
+        tags: ["anglais", "en", "global", "guides", "tiers", "meta", "build"],
+        note: 'Incontournable. Pense à choisir "Global" dans les paramètres.',
+        quick: []
+      },
+      {
+        name: "Umamusu Wiki",
+        homeUrl: "https://umamusu.wiki/Main_Page",
+        tags: ["anglais", "en", "wiki", "database", "guides"],
+        quick: []
+      },
+      {
+        name: "Race Simulator (Umalator)",
+        homeUrl: "https://alpha123.github.io/uma-tools/umalator-global/#H4sIAAAAAAAACtWPTWrDMBCF7%2FLWWshuG4J2WZZuClmWLIQ1dkUsyWhGmBJ89zJJSmlu0N33huH9XDCUVpleA1xne%2FtkkNmnZSaGe7HWoDG9F34jWuCkNjKofqBAI9wFqZQA1xtMtbSsHgYrefmkemUmzyVfUWKi%2B6sPpGl2M2jJd2pUmoxRtAU6a3e2gwEvRGrZaw0Wn2L2P3Ipq0bslacmDPesuEYOJd0FS%2FVC0xccjpTPpcEgRBafBzosEqVpDxw1qtXR%2F7ke8GvweD7HeWa4D61qdx1OtyH9w5D%2FMOG0bd8LhbFRAwIAAA%3D%3D",
+        tags: ["anglais", "en", "simulateur", "race", "compare", "global", "tools"],
+        note: "Simulateur de course + comparaison d'Uma.",
+        quick: []
+      },
+      {
+        name: "Uma Musume DB (Pure DB)",
+        homeUrl: "https://uma-global.pure-db.com/#/search",
+        tags: ["anglais", "en", "database", "friends", "supports", "global"],
+        note: "Recherche d'amis selon cartes / Uma.",
+        quick: []
+      },
+      {
+        name: "Kamigame (Global)",
+        homeUrl: "https://kamigame.jp/umamusume/page/380240391003208403.html",
+        tags: ["japonais", "jp", "global", "guides", "tiers"],
+        note: "Site japonais avec une page Global.",
+        quick: []
+      },
+
+      // Japonais
+      {
+        name: "UmaSim (mee1080)",
+        homeUrl: "https://mee1080.github.io/umasim/",
+        tags: ["japonais", "jp", "simulateur", "training", "tools"],
+        quick: [
+          { label: "Race", url: "https://mee1080.github.io/umasim/race/" }
+        ]
+      },
+      {
+        name: "GameWith",
+        homeUrl: "https://gamewith.jp/uma-musume",
+        tags: ["japonais", "jp", "guides", "wiki"],
+        quick: []
+      },
+      {
+        name: "攻略.tools",
+        homeUrl: "https://ウマ娘.攻略.tools",
+        tags: ["japonais", "jp", "tools", "rankings"],
+        quick: [
+          { label: "Succession", url: "https://ウマ娘.攻略.tools/characters/rankings/succession/total" }
+        ]
+      },
+      {
+        name: "Game8",
+        homeUrl: "https://game8.jp/umamusume",
+        tags: ["japonais", "jp", "guides", "wiki"],
+        quick: []
+      },
+
+      // Google (Sheets / Docs)
+      {
+        name: "Google Sheet #1",
+        homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
+        tags: ["google", "sheet", "spreadsheet", "guide"],
+        quick: []
+      },
+      {
+        name: "Google Sheet #2 (pub)",
+        homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
+        tags: ["google", "sheet", "spreadsheet", "guide"],
+        quick: []
+      },
+      {
+        name: "Google Doc #1",
+        homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
+        tags: ["google", "doc", "document", "guide"],
+        quick: []
+      },
+      {
+        name: "Google Sheet #3",
+        homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
+        tags: ["google", "sheet", "spreadsheet", "guide"],
+        quick: []
+      },
+      {
+        name: "Google Doc #2",
+        homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
+        tags: ["google", "doc", "document", "guide"],
+        quick: []
+      },
+
+      // Placeholder pour plus tard
+      // { name: "YouTube (à venir)", homeUrl: "https://www.youtube.com", tags:["youtube","videos"], quick: [] },
+    ];
+
+    const grid = document.getElementById("grid");
+    const q = document.getElementById("q");
+
+    function safeUrl(u){
+      try { return new URL(u).toString(); } catch { return null; }
+    }
+
+    function hostFromUrl(u){
+      try { return new URL(u).hostname; } catch { return null; }
+    }
+
+    // Favicons (front-only, sans CORS)
+    function googleFavicon(host, size=128){
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=${size}`;
+    }
+    function ddgFavicon(host){
+      return `https://icons.duckduckgo.com/ip3/${encodeURIComponent(host)}.ico`;
+    }
+
+    function resolveIcon(site){
+      if (site.icon) return site.icon;
+      const host = hostFromUrl(site.homeUrl);
+      return host ? googleFavicon(host, 128) : "";
+    }
+
+    function normalizeTags(tags){
+      if (!Array.isArray(tags)) return [];
+      return tags
+        .map(t => String(t || "").trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    function render(list){
+      grid.innerHTML = "";
+
+      for (const site of list){
+        const home = safeUrl(site.homeUrl);
+        if (!home) continue;
+
+        const tile = document.createElement("article");
+        tile.className = "tile";
+
+        const main = document.createElement("a");
+        main.className = "main-btn";
+        main.href = home;
+        main.target = "_blank";
+        main.rel = "noopener noreferrer";
+        main.setAttribute("aria-label", `Ouvrir ${site.name}`);
+        if (site.note) main.title = site.note;
+
+        const icon = document.createElement("div");
+        icon.className = "icon";
+
+        const img = document.createElement("img");
+        img.alt = `${site.name} icon`;
+        img.loading = "lazy";
+        img.src = resolveIcon(site);
+
+        img.onerror = () => {
+          if (img.dataset.fallbackDone === "1") {
+            img.style.display = "none";
+            return;
+          }
+          const host = hostFromUrl(site.homeUrl);
+          if (!host) { img.style.display = "none"; return; }
+          img.dataset.fallbackDone = "1";
+          img.src = ddgFavicon(host);
+        };
+
+        icon.appendChild(img);
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = site.name;
+
+        main.appendChild(icon);
+        main.appendChild(name);
+        tile.appendChild(main);
+
+        const quickLinks = (site.quick || [])
+          .filter(x => safeUrl(x.url))
+          .slice(0, 3);
+
+        if (quickLinks.length){
+          const quick = document.createElement("div");
+          quick.className = "quick";
+
+          for (const l of quickLinks){
+            const a = document.createElement("a");
+            a.textContent = l.label || "Lien";
+            a.href = safeUrl(l.url);
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            quick.appendChild(a);
+          }
+          tile.appendChild(quick);
+        }
+
+        grid.appendChild(tile);
+      }
+    }
+
+    function filterSites(term){
+      const t = term.trim().toLowerCase();
+      if (!t) return SITES;
+
+      return SITES.filter(s => {
+        const nameMatch = (s.name || "").toLowerCase().includes(t);
+
+        const quickMatch = (s.quick || []).some(l => {
+          const label = (l.label || "").toLowerCase();
+          const url = (l.url || "").toLowerCase();
+          return label.includes(t) || url.includes(t);
+        });
+
+        const urlMatch = (s.homeUrl || "").toLowerCase().includes(t);
+
+        const tagsMatch = normalizeTags(s.tags).some(tag => tag.includes(t));
+
+        return nameMatch || quickMatch || urlMatch || tagsMatch;
+      });
+    }
+
+    q.addEventListener("input", () => render(filterSites(q.value)));
+    render(SITES);
+  </script>
+</body>
+</html>
