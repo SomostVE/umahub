@@ -541,15 +541,21 @@
 
     function updateFilterStatus(){
       const active = getActiveLangs();
-      const langText =
-        active.size === 3 ? "Toutes les langues" :
-        active.size === 0 ? "Aucune langue" :
-        active.has("en") ? "Anglais" : "Japonais" : "français";
-
-      filterStatus.textContent = newPlayer.checked
-        ? `${langText} · Nouveau joueur`
-        : langText;
+    
+      if (active.size === 0) {
+        filterStatus.textContent = "Aucune langue";
+        return;
+      }
+    
+      const labels = [];
+      if (active.has("en")) labels.push("Anglais");
+      if (active.has("fr")) labels.push("Français");
+      if (active.has("jp")) labels.push("Japonais");
+    
+      const langText = (active.size === 3) ? "Toutes les langues" : labels.join(" + ");
+      filterStatus.textContent = newPlayer.checked ? `${langText} · Nouveau joueur` : langText;
     }
+
 
     function langAllowed(item, activeLangs){
       const lang = (item.lang || "en").toLowerCase();
