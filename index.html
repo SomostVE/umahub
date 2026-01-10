@@ -449,6 +449,7 @@
           <div class="filter-meta">
             <button id="reset-filters" class="link-btn" type="button">Réinitialiser</button>
           </div>
+
         </div>
       </aside>
 
@@ -507,8 +508,7 @@
     const langJp = document.getElementById("lang-jp");
     const langFr = document.getElementById("lang-fr");
     const resetBtn = document.getElementById("reset-filters");
-    const filterStatus = document.getElementById("filter-status");
-
+    
     function safeUrl(u){ try { return new URL(u).toString(); } catch { return null; } }
     function hostFromUrl(u){ try { return new URL(u).hostname; } catch { return null; } }
 
@@ -714,8 +714,7 @@
     }
 
     function rerender(){
-      updateFilterStatus();
-      render(q.value);
+    render(q.value);
     }
 
     q.addEventListener("input", rerender);
