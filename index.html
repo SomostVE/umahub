@@ -12,7 +12,6 @@
       --bg-img-mobile:  url("https://umamusume.com/_app/immutable/assets/kv.95F8Qc_S.png");
       --bg-img: var(--bg-img-desktop);
 
-      /* Theme */
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
 
@@ -21,16 +20,17 @@
       --glass2: rgba(255,255,255,.09);
       --hover:  rgba(255,255,255,.16);
 
-      --shadow: 0 14px 40px rgba(0,0,0,.40);
+      --shadow: 0 14px 40px rgba(0,0,0,.38);
       --radius: 18px;
 
-      /* Make it use more of the screen */
-      --maxw: 1440px;
-      --sidebar-w: 260px;
+      /* Full-width layout like your red boxes */
+      --maxw: 100%;
+      --sidebar-w: 280px;
+      --page-pad: 22px;
     }
 
     @media (max-width: 720px){
-      :root{ --bg-img: var(--bg-img-mobile); }
+      :root{ --bg-img: var(--bg-img-mobile); --page-pad: 14px; }
     }
 
     *{ box-sizing:border-box; }
@@ -42,7 +42,7 @@
       overflow-x: hidden;
     }
 
-    /* Background image: less blur + more visible */
+    /* Background: less blur so we see the image */
     body::before{
       content:"";
       position: fixed;
@@ -50,27 +50,27 @@
       background-image: var(--bg-img);
       background-size: cover;
       background-position: center;
-      filter: blur(8px) saturate(1.15) brightness(1.05);
+      filter: blur(6px) saturate(1.12) brightness(1.05);
       transform: scale(1.02);
       z-index: -2;
     }
 
-    /* Overlay: less dark so image shows */
+    /* Overlay: lighter than before */
     body::after{
       content:"";
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(1200px 700px at 20% 0%, rgba(0,0,0,.18), transparent 60%),
-        radial-gradient(900px 600px at 80% 10%, rgba(0,0,0,.16), transparent 55%),
-        linear-gradient(to bottom, rgba(0,0,0,.38), rgba(0,0,0,.55));
+        radial-gradient(1200px 700px at 20% 0%, rgba(0,0,0,.14), transparent 60%),
+        radial-gradient(900px 600px at 80% 10%, rgba(0,0,0,.12), transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,.30), rgba(0,0,0,.48));
       z-index: -1;
     }
 
     header{
       max-width: var(--maxw);
       margin: 14px auto 6px;
-      padding: 0 14px;
+      padding: 0 var(--page-pad);
       display:flex;
       flex-direction: column;
       align-items: center;
@@ -81,7 +81,7 @@
       margin:0;
       font-size: 18px;
       letter-spacing: .2px;
-      text-shadow: 0 10px 22px rgba(0,0,0,.30);
+      text-shadow: 0 10px 22px rgba(0,0,0,.26);
     }
 
     .search-wrap{
@@ -91,7 +91,7 @@
     }
 
     .search{
-      width: min(760px, 100%);
+      width: min(820px, 100%);
       padding: 12px 14px;
       border-radius: 16px;
       border: none;
@@ -107,22 +107,22 @@
     main{
       max-width: var(--maxw);
       margin: 8px auto 34px;
-      padding: 0 14px;
+      padding: 0 var(--page-pad);
     }
 
-    /* Layout: sidebar left + content right */
+    /* Layout: sidebar left + content right (more spacing, less "serré") */
     .layout{
       display:grid;
       grid-template-columns: var(--sidebar-w) 1fr;
-      gap: 14px;
+      gap: 28px;
       align-items: start;
     }
 
-    @media (max-width: 860px){
-      .layout{ grid-template-columns: 1fr; }
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; gap: 14px; }
     }
 
-    /* Sidebar (filters) */
+    /* Sidebar */
     aside.sidebar{
       position: sticky;
       top: 12px;
@@ -134,7 +134,7 @@
       -webkit-backdrop-filter: blur(14px);
     }
 
-    @media (max-width: 860px){
+    @media (max-width: 980px){
       aside.sidebar{ position: static; }
     }
 
@@ -152,11 +152,17 @@
       border-top: 1px solid rgba(255,255,255,.16);
     }
 
+    .filter-title{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom: 6px;
+    }
+
     .filter-label{
       display:flex;
       align-items:center;
       gap:10px;
-      padding: 9px 10px;
+      padding: 10px 10px;
       border-radius: 12px;
       background: rgba(255,255,255,.07);
       margin-top: 8px;
@@ -168,20 +174,20 @@
       background: rgba(255,255,255,.11);
     }
 
-    /* Custom checkbox: visible on mobile */
+    /* Custom checkbox: always visible (mobile included) */
     .filter-label input[type="checkbox"]{
       appearance:none;
       -webkit-appearance:none;
       width:18px;
       height:18px;
       border-radius: 5px;
-      border: 1px solid rgba(255,255,255,.60);
+      border: 1px solid rgba(255,255,255,.68);
       background: rgba(0,0,0,.18);
       display:grid;
       place-content:center;
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.10),
-        0 8px 20px rgba(0,0,0,.25);
+        0 8px 20px rgba(0,0,0,.22);
       flex: 0 0 auto;
     }
     .filter-label input[type="checkbox"]::before{
@@ -192,7 +198,7 @@
       transform: scale(0);
       transition: transform .10s ease;
       background: rgba(255,255,255,.92);
-      box-shadow: 0 6px 18px rgba(0,0,0,.20);
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
     }
     .filter-label input[type="checkbox"]:checked::before{
       transform: scale(1);
@@ -203,7 +209,7 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
       color: var(--muted);
       font-size: 12px;
     }
@@ -217,12 +223,13 @@
       cursor:pointer;
       padding: 0;
       font-size: 12px;
+      white-space: nowrap;
     }
     .link-btn:hover{ color: rgba(255,255,255,.95); }
 
     /* Sections */
     .section{
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .section-head{
@@ -230,7 +237,7 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 12px;
-      margin: 16px 4px 8px;
+      margin: 14px 4px 8px;
     }
 
     .section-title{
@@ -240,7 +247,7 @@
       letter-spacing: .6px;
       text-transform: uppercase;
       color: rgba(255,255,255,.88);
-      text-shadow: 0 10px 22px rgba(0,0,0,.24);
+      text-shadow: 0 10px 22px rgba(0,0,0,.22);
     }
 
     .section-sub{
@@ -258,19 +265,19 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    /* Grid bounded => 1 résultat ne s’étire pas */
+    /* Content grid: more airy, uses space better */
     .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 320px));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
       align-items: start;
-      justify-content: center;
+      justify-content: start;
     }
 
     @media (max-width: 520px){
       .grid{
         grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-        justify-content: stretch;
+        gap: 12px;
       }
     }
 
@@ -278,6 +285,9 @@
       display:flex;
       flex-direction:column;
       gap:10px;
+      max-width: 380px; /* prevent gigantic cards on ultra-wide */
+      justify-self: start;
+      width: 100%;
     }
 
     .main-btn{
@@ -318,7 +328,7 @@
       width: 72%;
       height: 72%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.28));
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.24));
     }
 
     .name{
@@ -359,6 +369,21 @@
       transform: translateY(-1px);
     }
 
+    /* Fix: on mobile, quick-link labels (e.g. "Succession") must show fully */
+    @media (max-width: 520px){
+      .quick{
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .quick a{
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        font-size: 11px;
+        line-height: 1.1;
+        padding: 8px 6px;
+      }
+    }
+
     .empty{
       margin: 6px 4px 0;
       padding: 14px 16px;
@@ -387,8 +412,17 @@
       <aside class="sidebar" aria-label="Filtres">
         <h2>Filtres</h2>
 
+        <div class="filter-group" aria-label="Mode">
+          <div class="filter-title">Mode</div>
+
+          <label class="filter-label">
+            <input id="new-player" type="checkbox" />
+            <span>Nouveau joueur</span>
+          </label>
+        </div>
+
         <div class="filter-group" aria-label="Filtre par langue">
-          <div style="font-size:12px;color:var(--muted);">Langue</div>
+          <div class="filter-title">Langue</div>
 
           <label class="filter-label">
             <input id="lang-en" type="checkbox" checked />
@@ -412,26 +446,66 @@
   </main>
 
   <script>
-    // Sections (ordre d’affichage)
-    const CATEGORIES = [
-      { key: "sites",    title: "Sites",     subtitle: "Guides, wikis, tools" },
-      { key: "docs",     title: "Documents", subtitle: "Google Sheets / Docs" },
-      { key: "youtube",  title: "YouTube",   subtitle: "Chaînes & playlists (à compléter)" },
+    // Sections (ordre normal)
+    const CATEGORIES_DEFAULT = [
+      { key: "sites",   title: "Sites",     subtitle: "Guides, wikis, tools" },
+      { key: "docs",    title: "Documents", subtitle: "Google Sheets / Docs" },
+      { key: "youtube", title: "YouTube",   subtitle: "Vidéos & chaînes" },
+    ];
+
+    // Sections (mode nouveau joueur: YouTube en premier)
+    const CATEGORIES_NEWPLAYER = [
+      { key: "youtube", title: "YouTube",   subtitle: "Vidéos pour bien démarrer" },
+      { key: "sites",   title: "Sites",     subtitle: "Guides essentiels" },
+      { key: "docs",    title: "Documents", subtitle: "Feuilles utiles" },
     ];
 
     // Données
     // - category: "sites" | "docs" | "youtube"
     // - lang: "en" | "jp"
-    // - tags: utilisés par la recherche (pas affichés)
-    // - note: tooltip (title)
-    // - quick: liens rapides (max 3 affichés)
+    // - beginner: true => inclus en mode "Nouveau joueur"
     const RESOURCES = [
+      // =====================
+      // YouTube (EN) — Beginner first (mode nouveau joueur)
+      // =====================
+      {
+        category: "youtube",
+        lang: "en",
+        beginner: true,
+        name: "Beginner's Sparks Guide",
+        homeUrl: "https://youtu.be/CNrEIuwOde4?si=-rsjHCaBr3glvruU",
+        tags: ["youtube", "beginner", "sparks", "guide", "en"],
+        note: "Guide débutant sur les Sparks.",
+        quick: []
+      },
+      {
+        category: "youtube",
+        lang: "en",
+        beginner: true,
+        name: "Acceleration Skills Explained",
+        homeUrl: "https://youtu.be/lXA_hf2HsYU?si=4vCJvGDfnb7fFyEz",
+        tags: ["youtube", "beginner", "skills", "acceleration", "en"],
+        note: "Différences entre les skills d'accélération.",
+        quick: []
+      },
+      {
+        category: "youtube",
+        lang: "en",
+        beginner: true,
+        name: "1M Points FAST (Story Event)",
+        homeUrl: "https://youtu.be/0D7VlpgWTGM?si=cjLH5lbLYYyJinjE",
+        tags: ["youtube", "beginner", "event", "points", "farm", "en"],
+        note: "Optimisation des points en Story Event.",
+        quick: []
+      },
+
       // =====================
       // Sites (Anglophone / JP)
       // =====================
       {
         category: "sites",
         lang: "en",
+        beginner: true,
         name: "Gametora",
         homeUrl: "https://gametora.com/umamusume",
         tags: ["anglais", "en", "global", "guides", "tiers", "meta", "build"],
@@ -441,6 +515,7 @@
       {
         category: "sites",
         lang: "en",
+        beginner: true,
         name: "Umamusu Wiki",
         homeUrl: "https://umamusu.wiki/Main_Page",
         tags: ["anglais", "en", "wiki", "database", "guides"],
@@ -476,6 +551,7 @@
       {
         category: "sites",
         lang: "jp",
+        beginner: true,
         name: "Kamigame (Global)",
         homeUrl: "https://kamigame.jp/umamusume/page/380240391003208403.html",
         tags: ["japonais", "jp", "global", "guides", "tiers"],
@@ -495,6 +571,7 @@
       {
         category: "sites",
         lang: "jp",
+        beginner: true,
         name: "GameWith",
         homeUrl: "https://gamewith.jp/uma-musume",
         tags: ["japonais", "jp", "guides", "wiki"],
@@ -513,6 +590,7 @@
       {
         category: "sites",
         lang: "jp",
+        beginner: true,
         name: "Game8",
         homeUrl: "https://game8.jp/umamusume",
         tags: ["japonais", "jp", "guides", "wiki"],
@@ -525,6 +603,7 @@
       {
         category: "docs",
         lang: "en",
+        beginner: true,
         name: "Google Sheet #1",
         homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
         tags: ["google", "sheet", "spreadsheet", "guide", "en"],
@@ -533,6 +612,7 @@
       {
         category: "docs",
         lang: "en",
+        beginner: true,
         name: "Google Sheet #2 (pub)",
         homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
         tags: ["google", "sheet", "spreadsheet", "guide", "public", "en"],
@@ -541,6 +621,7 @@
       {
         category: "docs",
         lang: "en",
+        beginner: true,
         name: "Google Doc #1",
         homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
         tags: ["google", "doc", "document", "guide", "en"],
@@ -549,6 +630,7 @@
       {
         category: "docs",
         lang: "en",
+        beginner: true,
         name: "Google Sheet #3",
         homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
         tags: ["google", "sheet", "spreadsheet", "guide", "en"],
@@ -557,21 +639,18 @@
       {
         category: "docs",
         lang: "en",
+        beginner: true,
         name: "Google Doc #2",
         homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
         tags: ["google", "doc", "document", "guide", "en"],
         quick: []
       },
-
-      // =====================
-      // YouTube (à compléter)
-      // =====================
-      // Ajoute tes chaînes plus tard en mettant lang: "en" ou "jp"
     ];
 
     const content = document.getElementById("content");
     const q = document.getElementById("q");
 
+    const newPlayer = document.getElementById("new-player");
     const langEn = document.getElementById("lang-en");
     const langJp = document.getElementById("lang-jp");
     const resetBtn = document.getElementById("reset-filters");
@@ -585,7 +664,7 @@
       try { return new URL(u).hostname; } catch { return null; }
     }
 
-    // Favicons (front-only, sans CORS)
+    // Favicons (front-only, no CORS)
     function googleFavicon(host, size=128){
       return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=${size}`;
     }
@@ -615,14 +694,25 @@
 
     function updateFilterStatus(){
       const active = getActiveLangs();
-      if (active.size === 2) { filterStatus.textContent = "Toutes les langues"; return; }
-      if (active.size === 0) { filterStatus.textContent = "Aucune langue"; return; }
-      filterStatus.textContent = active.has("en") ? "Anglais" : "Japonais";
+      const langText =
+        active.size === 2 ? "Toutes les langues" :
+        active.size === 0 ? "Aucune langue" :
+        active.has("en") ? "Anglais" : "Japonais";
+
+      filterStatus.textContent = newPlayer.checked
+        ? `${langText} · Nouveau joueur`
+        : langText;
     }
 
     function langAllowed(item, activeLangs){
       const lang = (item.lang || "en").toLowerCase();
       return activeLangs.has(lang);
+    }
+
+    function beginnerAllowed(item){
+      if (!newPlayer.checked) return true;
+      // Mode "Nouveau joueur" => uniquement ressources beginner
+      return item.beginner === true;
     }
 
     function matches(item, term){
@@ -645,10 +735,12 @@
     function render(term=""){
       content.innerHTML = "";
       const activeLangs = getActiveLangs();
+      const categories = newPlayer.checked ? CATEGORIES_NEWPLAYER : CATEGORIES_DEFAULT;
 
-      for (const cat of CATEGORIES){
+      for (const cat of categories){
         const items = RESOURCES
           .filter(r => r.category === cat.key)
+          .filter(r => beginnerAllowed(r))
           .filter(r => langAllowed(r, activeLangs))
           .filter(r => matches(r, term));
 
@@ -679,9 +771,7 @@
         if (!items.length){
           const empty = document.createElement("div");
           empty.className = "empty";
-          empty.textContent = (cat.key === "youtube")
-            ? "Aucun lien YouTube pour le moment (à ajouter)."
-            : "Aucun résultat dans cette section.";
+          empty.textContent = "Aucun résultat dans cette section.";
           section.appendChild(empty);
           content.appendChild(section);
           continue;
@@ -768,10 +858,12 @@
 
     // Events
     q.addEventListener("input", rerender);
+    newPlayer.addEventListener("change", rerender);
     langEn.addEventListener("change", rerender);
     langJp.addEventListener("change", rerender);
 
     resetBtn.addEventListener("click", () => {
+      newPlayer.checked = false;
       langEn.checked = true;
       langJp.checked = true;
       q.value = "";
