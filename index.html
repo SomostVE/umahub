@@ -534,10 +534,11 @@
     function getActiveLangs(){
       const active = new Set();
       if (langEn.checked) active.add("en");
+      if (langFr.checked) active.add("fr");
       if (langJp.checked) active.add("jp");
-      if (langJp.checked) active.add("fr");
       return active;
     }
+
 
     function updateFilterStatus(){
       const active = getActiveLangs();
