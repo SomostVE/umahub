@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Uma Musume NavHub</title>
+  <title>UmaHub</title>
 
   <style>
     :root{
-      /* Background images (desktop/mobile) */
       --bg-img-desktop: url("https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3224770/header.jpg?t=1765520190");
       --bg-img-mobile:  url("https://umamusume.com/_app/immutable/assets/kv.95F8Qc_S.png");
       --bg-img: var(--bg-img-desktop);
@@ -15,7 +14,6 @@
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
 
-      /* Clear glass */
       --glass:  rgba(255,255,255,.12);
       --glass2: rgba(255,255,255,.09);
       --hover:  rgba(255,255,255,.16);
@@ -23,7 +21,6 @@
       --shadow: 0 14px 40px rgba(0,0,0,.38);
       --radius: 18px;
 
-      /* Full-width layout */
       --maxw: 100%;
       --sidebar-w: 280px;
       --page-pad: 22px;
@@ -42,7 +39,6 @@
       overflow-x: hidden;
     }
 
-    /* Background: low blur, more visible */
     body::before{
       content:"";
       position: fixed;
@@ -55,7 +51,6 @@
       z-index: -2;
     }
 
-    /* Overlay: lighter */
     body::after{
       content:"";
       position: fixed;
@@ -77,15 +72,25 @@
       gap: 12px;
     }
 
+    /* Desktop: title left on same line as search */
+    .topbar{
+      width: 100%;
+      display:flex;
+      align-items:center;
+      gap: 14px;
+      justify-content: center;
+    }
+
     h1{
       margin:0;
       font-size: 18px;
       letter-spacing: .2px;
       text-shadow: 0 10px 22px rgba(0,0,0,.26);
+      white-space: nowrap;
     }
 
     .search-wrap{
-      width: 100%;
+      flex: 1 1 auto;
       display:flex;
       justify-content:center;
     }
@@ -103,6 +108,18 @@
       -webkit-backdrop-filter: blur(12px);
     }
     .search::placeholder{ color: rgba(255,255,255,.58); }
+
+    /* Mobile: keep centered stack */
+    @media (max-width: 720px){
+      header{ gap: 10px; }
+      .topbar{
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .search-wrap{ width: 100%; }
+      .search{ width: 100%; }
+    }
 
     main{
       max-width: var(--maxw);
@@ -224,9 +241,7 @@
     }
     .link-btn:hover{ color: rgba(255,255,255,.95); }
 
-    .section{
-      margin-top: 10px;
-    }
+    .section{ margin-top: 10px; }
 
     .section-head{
       display:flex;
@@ -364,7 +379,6 @@
       transform: translateY(-1px);
     }
 
-    /* Mobile: show full labels ("Succession" etc.) */
     @media (max-width: 520px){
       .quick{ grid-template-columns: repeat(2, 1fr); }
       .quick a{
@@ -394,9 +408,11 @@
 
 <body>
   <header>
-    <h1>Uma Musume NavHub</h1>
-    <div class="search-wrap">
-      <input id="q" class="search" type="search" placeholder="Rechercher (site, tag, lien)..." autocomplete="off" />
+    <div class="topbar">
+      <h1>UmaHub</h1>
+      <div class="search-wrap">
+        <input id="q" class="search" type="search" placeholder="Rechercher (site, tag, lien)..." autocomplete="off" />
+      </div>
     </div>
   </header>
 
@@ -439,213 +455,41 @@
   </main>
 
   <script>
-    const CATEGORIES_DEFAULT = [
-      { key: "sites",   title: "Sites",     subtitle: "Guides, wikis, tools" },
-      { key: "docs",    title: "Documents", subtitle: "Google Sheets / Docs" },
-      { key: "youtube", title: "YouTube",   subtitle: "Vidéos & chaînes" },
-    ];
-
-    const CATEGORIES_NEWPLAYER = [
-      { key: "youtube", title: "YouTube",   subtitle: "Vidéos pour bien démarrer" },
-      { key: "sites",   title: "Sites",     subtitle: "Guides essentiels" },
-      { key: "docs",    title: "Documents", subtitle: "Feuilles utiles" },
-    ];
-
     const RESOURCES = [
-      // =====================
-      // YouTube (EN) — Beginner
-      // =====================
-      {
-        category: "youtube",
-        lang: "en",
-        beginner: true,
-        name: "Beginner's Sparks Guide",
-        homeUrl: "https://youtu.be/CNrEIuwOde4?si=-rsjHCaBr3glvruU",
-        tags: ["youtube", "beginner", "sparks", "guide", "en"],
-        note: "Guide débutant sur les Sparks.",
-        quick: []
-      },
-      {
-        category: "youtube",
-        lang: "en",
-        beginner: true,
-        name: "Acceleration Skills Explained",
-        homeUrl: "https://youtu.be/lXA_hf2HsYU?si=4vCJvGDfnb7fFyEz",
-        tags: ["youtube", "beginner", "skills", "acceleration", "en"],
-        note: "Différences entre les skills d'accélération.",
-        quick: []
-      },
-      {
-        category: "youtube",
-        lang: "en",
-        beginner: true,
-        name: "1M Points FAST (Story Event)",
-        homeUrl: "https://youtu.be/0D7VlpgWTGM?si=cjLH5lbLYYyJinjE",
-        tags: ["youtube", "beginner", "event", "points", "farm", "en"],
-        note: "Optimisation des points en Story Event.",
-        quick: []
-      },
+      { category:"youtube", lang:"en", beginner:true, name:"Beginner's Sparks Guide", homeUrl:"https://youtu.be/CNrEIuwOde4?si=-rsjHCaBr3glvruU", tags:["youtube","beginner","sparks","guide","en"], note:"Guide débutant sur les Sparks.", quick:[] },
+      { category:"youtube", lang:"en", beginner:true, name:"Acceleration Skills Explained", homeUrl:"https://youtu.be/lXA_hf2HsYU?si=4vCJvGDfnb7fFyEz", tags:["youtube","beginner","skills","acceleration","en"], note:"Différences entre les skills d'accélération.", quick:[] },
+      { category:"youtube", lang:"en", beginner:true, name:"1M Points FAST (Story Event)", homeUrl:"https://youtu.be/0D7VlpgWTGM?si=cjLH5lbLYYyJinjE", tags:["youtube","beginner","event","points","farm","en"], note:"Optimisation des points en Story Event.", quick:[] },
 
-      // =====================
-      // Sites
-      // =====================
-      {
-        category: "sites",
-        lang: "en",
-        beginner: true,
-        name: "Gametora",
-        homeUrl: "https://gametora.com/umamusume",
-        tags: ["anglais", "en", "global", "guides", "tiers", "meta", "build"],
-        note: 'Incontournable. Pense à choisir "Global" dans les paramètres.',
-        quick: [
-          { label: "FAQ", url: "https://gametora.com/umamusume/guides/new-player-faq" },
-          { label: "Uma", url: "https://gametora.com/umamusume/characters" },
-          { label: "Cartes", url: "https://gametora.com/umamusume/supports" },
-        ]
-      },
-      {
-        category: "sites",
-        lang: "en",
-        beginner: true,
-        name: "Umamusu Wiki",
-        homeUrl: "https://umamusu.wiki/Main_Page",
-        tags: ["anglais", "en", "wiki", "database", "guides"],
-        quick: [
-          { label: "Uma", url: "https://umamusu.wiki/List_of_Characters" },
-          { label: "Cartes", url: "https://umamusu.wiki/Game:List_of_Support_Cards" },
-          { label: "Guide", url: "https://umamusu.wiki/Game:New_Player_Guide" },
-        ]
-      },
-      {
-        category: "sites",
-        lang: "en",
-        name: "Race Simulator (Umalator)",
-        homeUrl: "https://alpha123.github.io/uma-tools/umalator-global/#H4sIAAAAAAAACtWPTWrDMBCF7%2FLWWshuG4J2WZZuClmWLIQ1dkUsyWhGmBJ89zJJSmlu0N33huH9XDCUVpleA1xne%2FtkkNmnZSaGe7HWoDG9F34jWuCkNjKofqBAI9wFqZQA1xtMtbSsHgYrefmkemUmzyVfUWKi%2B6sPpGl2M2jJd2pUmoxRtAU6a3e2gwEvRGrZaw0Wn2L2P3Ipq0bslacmDPesuEYOJd0FS%2FVC0xccjpTPpcEgRBafBzosEqVpDxw1qtXR%2F7ke8GvweD7HeWa4D61qdx1OtyH9w5D%2FMOG0bd8LhbFRAwIAAA%3D%3D",
-        tags: ["anglais", "en", "simulateur", "race", "compare", "global", "tools"],
-        note: "Simulateur de course + comparaison d'Uma.",
-        quick: []
-      },
-      {
-        category: "sites",
-        lang: "en",
-        name: "Uma Musume DB (Pure DB)",
-        homeUrl: "https://uma-global.pure-db.com/#/search",
-        tags: ["anglais", "en", "database", "friends", "supports", "global"],
-        note: "Recherche d'amis selon cartes / Uma.",
-        quick: []
-      },
-      {
-        category: "sites",
-        lang: "en",
-        name: "Chronogenesis",
-        homeUrl: "https://chronogenesis.net/",
-        tags: ["anglais", "en", "friends", "supports", "club", "stats", "search", "global"],
-        note: "Recherche avancée (amis/supports) + stats de clubs.",
-        quick: []
-      },
-      {
-        category: "sites",
-        lang: "jp",
-        name: "Kamigame (Global)",
-        homeUrl: "https://kamigame.jp/umamusume/page/380240391003208403.html",
-        tags: ["japonais", "jp", "global", "guides", "tiers"],
-        note: "Site japonais avec une page Global.",
-        quick: []
-      },
-      {
-        category: "sites",
-        lang: "jp",
-        name: "UmaSim (mee1080)",
-        homeUrl: "https://mee1080.github.io/umasim/",
-        tags: ["japonais", "jp", "simulateur", "training", "tools"],
-        quick: [
-          { label: "Race", url: "https://mee1080.github.io/umasim/race/" }
-        ]
-      },
-      {
-        category: "sites",
-        lang: "jp",
-        name: "GameWith",
-        homeUrl: "https://gamewith.jp/uma-musume",
-        tags: ["japonais", "jp", "guides", "wiki"],
-        quick: []
-      },
-      {
-        category: "sites",
-        lang: "jp",
-        name: "攻略.tools",
-        homeUrl: "https://ウマ娘.攻略.tools",
-        tags: ["japonais", "jp", "tools", "rankings"],
-        quick: [
-          { label: "Uma", url: "https://ウマ娘.攻略.tools/characters/" }
-        ]
-      },
-      {
-        category: "sites",
-        lang: "jp",
-        name: "Game8",
-        homeUrl: "https://game8.jp/umamusume",
-        tags: ["japonais", "jp", "guides", "wiki"],
-        quick: []
-      },
+      { category:"sites", lang:"en", beginner:true, name:"Gametora", homeUrl:"https://gametora.com/umamusume", tags:["anglais","en","global","guides","tiers","meta","build"], note:'Incontournable. Pense à choisir "Global" dans les paramètres.', quick:[
+        { label:"FAQ", url:"https://gametora.com/umamusume/guides/new-player-faq" },
+        { label:"Uma", url:"https://gametora.com/umamusume/characters" },
+        { label:"Cartes", url:"https://gametora.com/umamusume/supports" },
+      ]},
+      { category:"sites", lang:"en", beginner:true, name:"Umamusu Wiki", homeUrl:"https://umamusu.wiki/Main_Page", tags:["anglais","en","wiki","database","guides"], quick:[
+        { label:"Uma", url:"https://umamusu.wiki/List_of_Characters" },
+        { label:"Cartes", url:"https://umamusu.wiki/Game:List_of_Support_Cards" },
+        { label:"Guide", url:"https://umamusu.wiki/Game:New_Player_Guide" },
+      ]},
+      { category:"sites", lang:"en", name:"Race Simulator (Umalator)", homeUrl:"https://alpha123.github.io/uma-tools/umalator-global/#H4sIAAAAAAAACtWPTWrDMBCF7%2FLWWshuG4J2WZZuClmWLIQ1dkUsyWhGmBJ89zJJSmlu0N33huH9XDCUVpleA1xne%2FtkkNmnZSaGe7HWoDG9F34jWuCkNjKofqBAI9wFqZQA1xtMtbSsHgYrefmkemUmzyVfUWKi%2B6sPpGl2M2jJd2pUmoxRtAU6a3e2gwEvRGrZaw0Wn2L2P3Ipq0bslacmDPesuEYOJd0FS%2FVC0xccjpTPpcEgRBafBzosEqVpDxw1qtXR%2F7ke8GvweD7HeWa4D61qdx1OtyH9w5D%2FMOG0bd8LhbFRAwIAAA%3D%3D", tags:["anglais","en","simulateur","race","compare","global","tools"], note:"Simulateur de course + comparaison d'Uma.", quick:[] },
+      { category:"sites", lang:"en", name:"Uma Musume DB (Pure DB)", homeUrl:"https://uma-global.pure-db.com/#/search", tags:["anglais","en","database","friends","supports","global"], note:"Recherche d'amis selon cartes / Uma.", quick:[] },
+      { category:"sites", lang:"en", name:"Chronogenesis", homeUrl:"https://chronogenesis.net/", tags:["anglais","en","friends","supports","club","stats","search","global"], note:"Recherche avancée (amis/supports) + stats de clubs.", quick:[] },
 
-      // =====================
-      // Documents (EN)
-      // =====================
-      {
-        category: "docs",
-        lang: "en",
-        beginner: true,
-        name: "Skills Spreadsheet",
-        homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
-        tags: ["google", "sheet", "skills", "spreadsheet", "en"],
-        quick: []
-      },
-      {
-        category: "docs",
-        lang: "en",
-        beginner: false, /* à retirer des beginner */
-        name: "Prochaines sorties",
-        homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
-        tags: ["google", "sheet", "release", "timeline", "en"],
-        quick: []
-      },
-      {
-        category: "docs",
-        lang: "en",
-        beginner: true,
-        name: "Explication Support Card",
-        homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
-        tags: ["google", "doc", "support", "cards", "en"],
-        quick: []
-      },
-      {
-        category: "docs",
-        lang: "en",
-        beginner: true,
-        name: "Score Support Card",
-        homeUrl: "https://docs.google.com/spreadsheets/d/17nbTcHUPqq8O6h_4Z6cVXwfkgEbpgO1VHzdLf-3YSfw/edit?gid=1776774504#gid=1776774504",
-        tags: ["google", "sheet", "score", "support", "cards", "en"],
-        quick: []
-      },
-      {
-        category: "docs",
-        lang: "en",
-        beginner: true,
-        name: "Simulateur de rangs",
-        homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
-        tags: ["google", "sheet", "rank", "simulator", "en"],
-        quick: []
-      },
-      {
-        category: "docs",
-        lang: "en",
-        beginner: true,
-        name: "Explication Champion Meeting",
-        homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
-        tags: ["google", "doc", "champion", "meeting", "en"],
-        quick: []
-      },
+      { category:"sites", lang:"jp", beginner:true, name:"Kamigame (Global)", homeUrl:"https://kamigame.jp/umamusume/page/380240391003208403.html", tags:["japonais","jp","global","guides","tiers"], note:"Site japonais avec une page Global.", quick:[] },
+      { category:"sites", lang:"jp", name:"UmaSim (mee1080)", homeUrl:"https://mee1080.github.io/umasim/", tags:["japonais","jp","simulateur","training","tools"], quick:[
+        { label:"Race", url:"https://mee1080.github.io/umasim/race/" }
+      ]},
+      { category:"sites", lang:"jp", beginner:true, name:"GameWith", homeUrl:"https://gamewith.jp/uma-musume", tags:["japonais","jp","guides","wiki"], quick:[] },
+      { category:"sites", lang:"jp", name:"攻略.tools", homeUrl:"https://ウマ娘.攻略.tools", tags:["japonais","jp","tools","rankings"], quick:[
+        { label:"Succession", url:"https://ウマ娘.攻略.tools/characters/rankings/succession/total" }
+      ]},
+      { category:"sites", lang:"jp", beginner:true, name:"Game8", homeUrl:"https://game8.jp/umamusume", tags:["japonais","jp","guides","wiki"], quick:[] },
+
+      { category:"docs", lang:"en", beginner:true, name:"Skills Spreadsheet", homeUrl:"https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk", tags:["google","sheet","skills","spreadsheet","en"], quick:[] },
+      { category:"docs", lang:"en", beginner:false, name:"Prochaines sorties", homeUrl:"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml", tags:["google","sheet","release","timeline","en"], quick:[] },
+      { category:"docs", lang:"en", beginner:true, name:"Explication Support Card", homeUrl:"https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm", tags:["google","doc","support","cards","en"], quick:[] },
+      { category:"docs", lang:"en", beginner:true, name:"Score Support Card", homeUrl:"https://docs.google.com/spreadsheets/d/17nbTcHUPqq8O6h_4Z6cVXwfkgEbpgO1VHzdLf-3YSfw/edit?gid=1776774504#gid=1776774504", tags:["google","sheet","score","support","cards","en"], quick:[] },
+      { category:"docs", lang:"en", beginner:true, name:"Simulateur de rangs", homeUrl:"https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574", tags:["google","sheet","rank","simulator","en"], quick:[] },
+      { category:"docs", lang:"en", beginner:true, name:"Explication Champion Meeting", homeUrl:"https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd", tags:["google","doc","champion","meeting","en"], quick:[] },
     ];
 
     const content = document.getElementById("content");
@@ -657,12 +501,8 @@
     const resetBtn = document.getElementById("reset-filters");
     const filterStatus = document.getElementById("filter-status");
 
-    function safeUrl(u){
-      try { return new URL(u).toString(); } catch { return null; }
-    }
-    function hostFromUrl(u){
-      try { return new URL(u).hostname; } catch { return null; }
-    }
+    function safeUrl(u){ try { return new URL(u).toString(); } catch { return null; } }
+    function hostFromUrl(u){ try { return new URL(u).hostname; } catch { return null; } }
 
     function googleFavicon(host, size=128){
       return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=${size}`;
@@ -802,7 +642,6 @@
           main.href = home;
           main.target = "_blank";
           main.rel = "noopener noreferrer";
-          main.setAttribute("aria-label", `Ouvrir ${item.name}`);
           if (item.note) main.title = item.note;
 
           const icon = document.createElement("div");
@@ -814,10 +653,7 @@
           img.src = resolveIcon(item);
 
           img.onerror = () => {
-            if (img.dataset.fallbackDone === "1") {
-              img.style.display = "none";
-              return;
-            }
+            if (img.dataset.fallbackDone === "1") { img.style.display = "none"; return; }
             const host = hostFromUrl(item.homeUrl);
             if (!host) { img.style.display = "none"; return; }
             img.dataset.fallbackDone = "1";
