@@ -23,7 +23,7 @@
       --shadow: 0 14px 40px rgba(0,0,0,.38);
       --radius: 18px;
 
-      /* Full-width layout like your red boxes */
+      /* Full-width layout */
       --maxw: 100%;
       --sidebar-w: 280px;
       --page-pad: 22px;
@@ -42,7 +42,7 @@
       overflow-x: hidden;
     }
 
-    /* Background: less blur so we see the image */
+    /* Background: low blur, more visible */
     body::before{
       content:"";
       position: fixed;
@@ -55,7 +55,7 @@
       z-index: -2;
     }
 
-    /* Overlay: lighter than before */
+    /* Overlay: lighter */
     body::after{
       content:"";
       position: fixed;
@@ -110,7 +110,6 @@
       padding: 0 var(--page-pad);
     }
 
-    /* Layout: sidebar left + content right (more spacing, less "serré") */
     .layout{
       display:grid;
       grid-template-columns: var(--sidebar-w) 1fr;
@@ -122,7 +121,6 @@
       .layout{ grid-template-columns: 1fr; gap: 14px; }
     }
 
-    /* Sidebar */
     aside.sidebar{
       position: sticky;
       top: 12px;
@@ -174,7 +172,6 @@
       background: rgba(255,255,255,.11);
     }
 
-    /* Custom checkbox: always visible (mobile included) */
     .filter-label input[type="checkbox"]{
       appearance:none;
       -webkit-appearance:none;
@@ -227,7 +224,6 @@
     }
     .link-btn:hover{ color: rgba(255,255,255,.95); }
 
-    /* Sections */
     .section{
       margin-top: 10px;
     }
@@ -265,7 +261,6 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    /* Content grid: more airy, uses space better */
     .grid{
       display:grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -285,7 +280,7 @@
       display:flex;
       flex-direction:column;
       gap:10px;
-      max-width: 380px; /* prevent gigantic cards on ultra-wide */
+      max-width: 380px;
       justify-self: start;
       width: 100%;
     }
@@ -369,11 +364,9 @@
       transform: translateY(-1px);
     }
 
-    /* Fix: on mobile, quick-link labels (e.g. "Succession") must show fully */
+    /* Mobile: show full labels ("Succession" etc.) */
     @media (max-width: 520px){
-      .quick{
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .quick{ grid-template-columns: repeat(2, 1fr); }
       .quick a{
         white-space: normal;
         overflow: visible;
@@ -446,27 +439,21 @@
   </main>
 
   <script>
-    // Sections (ordre normal)
     const CATEGORIES_DEFAULT = [
       { key: "sites",   title: "Sites",     subtitle: "Guides, wikis, tools" },
       { key: "docs",    title: "Documents", subtitle: "Google Sheets / Docs" },
       { key: "youtube", title: "YouTube",   subtitle: "Vidéos & chaînes" },
     ];
 
-    // Sections (mode nouveau joueur: YouTube en premier)
     const CATEGORIES_NEWPLAYER = [
       { key: "youtube", title: "YouTube",   subtitle: "Vidéos pour bien démarrer" },
       { key: "sites",   title: "Sites",     subtitle: "Guides essentiels" },
       { key: "docs",    title: "Documents", subtitle: "Feuilles utiles" },
     ];
 
-    // Données
-    // - category: "sites" | "docs" | "youtube"
-    // - lang: "en" | "jp"
-    // - beginner: true => inclus en mode "Nouveau joueur"
     const RESOURCES = [
       // =====================
-      // YouTube (EN) — Beginner first (mode nouveau joueur)
+      // YouTube (EN) — Beginner
       // =====================
       {
         category: "youtube",
@@ -500,7 +487,7 @@
       },
 
       // =====================
-      // Sites (Anglophone / JP)
+      // Sites
       // =====================
       {
         category: "sites",
@@ -510,7 +497,11 @@
         homeUrl: "https://gametora.com/umamusume",
         tags: ["anglais", "en", "global", "guides", "tiers", "meta", "build"],
         note: 'Incontournable. Pense à choisir "Global" dans les paramètres.',
-        quick: []
+        quick: [
+          { label: "FAQ", url: "https://gametora.com/umamusume/guides/new-player-faq" },
+          { label: "Uma", url: "https://gametora.com/umamusume/characters" },
+          { label: "Cartes", url: "https://gametora.com/umamusume/supports" },
+        ]
       },
       {
         category: "sites",
@@ -519,7 +510,11 @@
         name: "Umamusu Wiki",
         homeUrl: "https://umamusu.wiki/Main_Page",
         tags: ["anglais", "en", "wiki", "database", "guides"],
-        quick: []
+        quick: [
+          { label: "Uma", url: "https://umamusu.wiki/List_of_Characters" },
+          { label: "Cartes", url: "https://umamusu.wiki/Game:List_of_Support_Cards" },
+          { label: "Guide", url: "https://umamusu.wiki/Game:New_Player_Guide" },
+        ]
       },
       {
         category: "sites",
@@ -598,51 +593,60 @@
       },
 
       // =====================
-      // Documents (Google) — tous en anglais
+      // Documents (EN)
       // =====================
       {
         category: "docs",
         lang: "en",
         beginner: true,
-        name: "Google Sheet #1",
+        name: "Skills Spreadsheet",
         homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
-        tags: ["google", "sheet", "spreadsheet", "guide", "en"],
+        tags: ["google", "sheet", "skills", "spreadsheet", "en"],
         quick: []
       },
       {
         category: "docs",
         lang: "en",
-        beginner: true,
-        name: "Google Sheet #2 (pub)",
+        beginner: false, /* à retirer des beginner */
+        name: "Prochaines sorties",
         homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
-        tags: ["google", "sheet", "spreadsheet", "guide", "public", "en"],
+        tags: ["google", "sheet", "release", "timeline", "en"],
         quick: []
       },
       {
         category: "docs",
         lang: "en",
         beginner: true,
-        name: "Google Doc #1",
+        name: "Explication Support Card",
         homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
-        tags: ["google", "doc", "document", "guide", "en"],
+        tags: ["google", "doc", "support", "cards", "en"],
         quick: []
       },
       {
         category: "docs",
         lang: "en",
         beginner: true,
-        name: "Google Sheet #3",
+        name: "Score Support Card",
+        homeUrl: "https://docs.google.com/spreadsheets/d/17nbTcHUPqq8O6h_4Z6cVXwfkgEbpgO1VHzdLf-3YSfw/edit?gid=1776774504#gid=1776774504",
+        tags: ["google", "sheet", "score", "support", "cards", "en"],
+        quick: []
+      },
+      {
+        category: "docs",
+        lang: "en",
+        beginner: true,
+        name: "Simulateur de rangs",
         homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
-        tags: ["google", "sheet", "spreadsheet", "guide", "en"],
+        tags: ["google", "sheet", "rank", "simulator", "en"],
         quick: []
       },
       {
         category: "docs",
         lang: "en",
         beginner: true,
-        name: "Google Doc #2",
+        name: "Explication Champion Meeting",
         homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
-        tags: ["google", "doc", "document", "guide", "en"],
+        tags: ["google", "doc", "champion", "meeting", "en"],
         quick: []
       },
     ];
@@ -659,12 +663,10 @@
     function safeUrl(u){
       try { return new URL(u).toString(); } catch { return null; }
     }
-
     function hostFromUrl(u){
       try { return new URL(u).hostname; } catch { return null; }
     }
 
-    // Favicons (front-only, no CORS)
     function googleFavicon(host, size=128){
       return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=${size}`;
     }
@@ -680,9 +682,7 @@
 
     function normalizeTags(tags){
       if (!Array.isArray(tags)) return [];
-      return tags
-        .map(t => String(t || "").trim().toLowerCase())
-        .filter(Boolean);
+      return tags.map(t => String(t || "").trim().toLowerCase()).filter(Boolean);
     }
 
     function getActiveLangs(){
@@ -711,7 +711,6 @@
 
     function beginnerAllowed(item){
       if (!newPlayer.checked) return true;
-      // Mode "Nouveau joueur" => uniquement ressources beginner
       return item.beginner === true;
     }
 
@@ -732,10 +731,24 @@
       return nameMatch || urlMatch || quickMatch || tagsMatch;
     }
 
+    function getCategories(){
+      return newPlayer.checked
+        ? [
+            { key: "youtube", title: "YouTube",   subtitle: "Vidéos pour bien démarrer" },
+            { key: "sites",   title: "Sites",     subtitle: "Guides essentiels" },
+            { key: "docs",    title: "Documents", subtitle: "Feuilles utiles" },
+          ]
+        : [
+            { key: "sites",   title: "Sites",     subtitle: "Guides, wikis, tools" },
+            { key: "docs",    title: "Documents", subtitle: "Google Sheets / Docs" },
+            { key: "youtube", title: "YouTube",   subtitle: "Vidéos & chaînes" },
+          ];
+    }
+
     function render(term=""){
       content.innerHTML = "";
       const activeLangs = getActiveLangs();
-      const categories = newPlayer.checked ? CATEGORIES_NEWPLAYER : CATEGORIES_DEFAULT;
+      const categories = getCategories();
 
       for (const cat of categories){
         const items = RESOURCES
@@ -856,7 +869,6 @@
       render(q.value);
     }
 
-    // Events
     q.addEventListener("input", rerender);
     newPlayer.addEventListener("change", rerender);
     langEn.addEventListener("change", rerender);
@@ -871,7 +883,6 @@
       q.focus();
     });
 
-    // Init
     rerender();
   </script>
 </body>
