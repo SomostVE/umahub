@@ -17,15 +17,16 @@
       --muted: rgba(255,255,255,.70);
 
       /* Clear glass */
-      --glass:  rgba(255,255,255,.10);
-      --glass2: rgba(255,255,255,.08);
-      --hover:  rgba(255,255,255,.14);
+      --glass:  rgba(255,255,255,.12);
+      --glass2: rgba(255,255,255,.09);
+      --hover:  rgba(255,255,255,.16);
 
-      --shadow: 0 14px 40px rgba(0,0,0,.42);
+      --shadow: 0 14px 40px rgba(0,0,0,.40);
       --radius: 18px;
 
-      --maxw: 1180px;
-      --sidebar-w: 240px;
+      /* Make it use more of the screen */
+      --maxw: 1440px;
+      --sidebar-w: 260px;
     }
 
     @media (max-width: 720px){
@@ -41,7 +42,7 @@
       overflow-x: hidden;
     }
 
-    /* Blurred background layer */
+    /* Background image: less blur + more visible */
     body::before{
       content:"";
       position: fixed;
@@ -49,38 +50,38 @@
       background-image: var(--bg-img);
       background-size: cover;
       background-position: center;
-      filter: blur(14px);
-      transform: scale(1.06);
+      filter: blur(8px) saturate(1.15) brightness(1.05);
+      transform: scale(1.02);
       z-index: -2;
     }
 
-    /* Dark/contrast overlay */
+    /* Overlay: less dark so image shows */
     body::after{
       content:"";
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(1200px 700px at 20% 0%, rgba(0,0,0,.25), transparent 60%),
-        radial-gradient(900px 600px at 80% 10%, rgba(0,0,0,.22), transparent 55%),
-        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.70));
+        radial-gradient(1200px 700px at 20% 0%, rgba(0,0,0,.18), transparent 60%),
+        radial-gradient(900px 600px at 80% 10%, rgba(0,0,0,.16), transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,.38), rgba(0,0,0,.55));
       z-index: -1;
     }
 
     header{
       max-width: var(--maxw);
-      margin: 22px auto 10px;
-      padding: 0 16px;
+      margin: 14px auto 6px;
+      padding: 0 14px;
       display:flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     h1{
       margin:0;
       font-size: 18px;
       letter-spacing: .2px;
-      text-shadow: 0 10px 22px rgba(0,0,0,.35);
+      text-shadow: 0 10px 22px rgba(0,0,0,.30);
     }
 
     .search-wrap{
@@ -90,7 +91,7 @@
     }
 
     .search{
-      width: min(620px, 100%);
+      width: min(760px, 100%);
       padding: 12px 14px;
       border-radius: 16px;
       border: none;
@@ -101,44 +102,40 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
-    .search::placeholder{ color: rgba(255,255,255,.55); }
+    .search::placeholder{ color: rgba(255,255,255,.58); }
 
     main{
       max-width: var(--maxw);
-      margin: 10px auto 44px;
-      padding: 0 16px;
+      margin: 8px auto 34px;
+      padding: 0 14px;
     }
 
     /* Layout: sidebar left + content right */
     .layout{
       display:grid;
       grid-template-columns: var(--sidebar-w) 1fr;
-      gap: 16px;
+      gap: 14px;
       align-items: start;
     }
 
     @media (max-width: 860px){
-      .layout{
-        grid-template-columns: 1fr;
-      }
+      .layout{ grid-template-columns: 1fr; }
     }
 
     /* Sidebar (filters) */
     aside.sidebar{
       position: sticky;
-      top: 14px;
+      top: 12px;
       padding: 14px;
       border-radius: var(--radius);
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.10);
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
     }
 
     @media (max-width: 860px){
-      aside.sidebar{
-        position: static;
-      }
+      aside.sidebar{ position: static; }
     }
 
     .sidebar h2{
@@ -152,29 +149,53 @@
     .filter-group{
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,.14);
+      border-top: 1px solid rgba(255,255,255,.16);
     }
 
     .filter-label{
       display:flex;
       align-items:center;
       gap:10px;
-      padding: 8px 10px;
+      padding: 9px 10px;
       border-radius: 12px;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       margin-top: 8px;
       cursor: pointer;
       user-select: none;
     }
 
     .filter-label:hover{
-      background: rgba(255,255,255,.10);
+      background: rgba(255,255,255,.11);
     }
 
-    .filter-label input{
-      width: 16px;
-      height: 16px;
-      accent-color: rgba(255,255,255,.85);
+    /* Custom checkbox: visible on mobile */
+    .filter-label input[type="checkbox"]{
+      appearance:none;
+      -webkit-appearance:none;
+      width:18px;
+      height:18px;
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,.60);
+      background: rgba(0,0,0,.18);
+      display:grid;
+      place-content:center;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.10),
+        0 8px 20px rgba(0,0,0,.25);
+      flex: 0 0 auto;
+    }
+    .filter-label input[type="checkbox"]::before{
+      content:"";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      transform: scale(0);
+      transition: transform .10s ease;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 6px 18px rgba(0,0,0,.20);
+    }
+    .filter-label input[type="checkbox"]:checked::before{
+      transform: scale(1);
     }
 
     .filter-meta{
@@ -191,17 +212,17 @@
       appearance:none;
       border:none;
       background: transparent;
-      color: rgba(255,255,255,.80);
+      color: rgba(255,255,255,.82);
       text-decoration: underline;
       cursor:pointer;
       padding: 0;
       font-size: 12px;
     }
-    .link-btn:hover{ color: rgba(255,255,255,.92); }
+    .link-btn:hover{ color: rgba(255,255,255,.95); }
 
     /* Sections */
     .section{
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
     .section-head{
@@ -209,7 +230,7 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 12px;
-      margin: 18px 4px 10px;
+      margin: 16px 4px 8px;
     }
 
     .section-title{
@@ -218,8 +239,8 @@
       font-weight: 750;
       letter-spacing: .6px;
       text-transform: uppercase;
-      color: rgba(255,255,255,.86);
-      text-shadow: 0 10px 22px rgba(0,0,0,.30);
+      color: rgba(255,255,255,.88);
+      text-shadow: 0 10px 22px rgba(0,0,0,.24);
     }
 
     .section-sub{
@@ -230,8 +251,8 @@
 
     .divider{
       height: 1px;
-      background: rgba(255,255,255,.14);
-      margin: 8px 4px 14px;
+      background: rgba(255,255,255,.16);
+      margin: 8px 4px 12px;
       border-radius: 999px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -240,16 +261,15 @@
     /* Grid bounded => 1 résultat ne s’étire pas */
     .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 270px));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 320px));
+      gap: 14px;
       align-items: start;
       justify-content: center;
     }
 
-    /* Mobile: 2 colonnes si possible, sinon 1 */
     @media (max-width: 520px){
       .grid{
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
         justify-content: stretch;
       }
     }
@@ -290,7 +310,7 @@
       border-radius: 18px;
       display:grid;
       place-items:center;
-      background: rgba(255,255,255,.10);
+      background: rgba(255,255,255,.11);
       overflow:hidden;
     }
 
@@ -298,7 +318,7 @@
       width: 72%;
       height: 72%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.28));
     }
 
     .name{
@@ -323,7 +343,7 @@
       text-decoration:none;
       color: var(--text);
 
-      background: rgba(255,255,255,.09);
+      background: rgba(255,255,255,.10);
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -335,7 +355,7 @@
     }
 
     .quick a:hover{
-      background: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.15);
       transform: translateY(-1px);
     }
 
@@ -343,7 +363,7 @@
       margin: 6px 4px 0;
       padding: 14px 16px;
       border-radius: var(--radius);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -380,11 +400,6 @@
             <span>Japonais</span>
           </label>
 
-          <label class="filter-label">
-            <input id="lang-neutral" type="checkbox" checked />
-            <span>Neutre</span>
-          </label>
-
           <div class="filter-meta">
             <span id="filter-status">Toutes les langues</span>
             <button id="reset-filters" class="link-btn" type="button">Réinitialiser</button>
@@ -404,10 +419,12 @@
       { key: "youtube",  title: "YouTube",   subtitle: "Chaînes & playlists (à compléter)" },
     ];
 
-    // Langues gérées par le filtre
-    // - en: anglais
-    // - jp: japonais
-    // - neutral: neutre (docs, ressources multi-langues, etc.)
+    // Données
+    // - category: "sites" | "docs" | "youtube"
+    // - lang: "en" | "jp"
+    // - tags: utilisés par la recherche (pas affichés)
+    // - note: tooltip (title)
+    // - quick: liens rapides (max 3 affichés)
     const RESOURCES = [
       // =====================
       // Sites (Anglophone / JP)
@@ -503,64 +520,53 @@
       },
 
       // =====================
-      // Documents (Google) — neutre par défaut
+      // Documents (Google) — tous en anglais
       // =====================
       {
         category: "docs",
-        lang: "neutral",
+        lang: "en",
         name: "Google Sheet #1",
         homeUrl: "https://docs.google.com/spreadsheets/d/1oB3eTvKqREtJDWJL0q80O_VjBcpOmRl5xE0z5fZKgFY/edit?usp=drivesdk",
-        tags: ["google", "sheet", "spreadsheet", "guide"],
+        tags: ["google", "sheet", "spreadsheet", "guide", "en"],
         quick: []
       },
       {
         category: "docs",
-        lang: "neutral",
+        lang: "en",
         name: "Google Sheet #2 (pub)",
         homeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1bJUx-NQHJvwYE3Jcs9UP5aFVdWwoPVZc5Z7GN3oUGyB7-Rl8YZ48y-lJEvFWTGIrQmOa-yTehPkK/pubhtml",
-        tags: ["google", "sheet", "spreadsheet", "guide", "public"],
+        tags: ["google", "sheet", "spreadsheet", "guide", "public", "en"],
         quick: []
       },
       {
         category: "docs",
-        lang: "neutral",
+        lang: "en",
         name: "Google Doc #1",
         homeUrl: "https://docs.google.com/document/d/1iUV8pAc5-eXePJJA8hhgeJA6KjuCczjf68ZxdzYY4tM/edit?tab=t.0#heading=h.eov9wixpwcwm",
-        tags: ["google", "doc", "document", "guide"],
+        tags: ["google", "doc", "document", "guide", "en"],
         quick: []
       },
       {
         category: "docs",
-        lang: "neutral",
+        lang: "en",
         name: "Google Sheet #3",
         homeUrl: "https://docs.google.com/spreadsheets/d/1AAZCVDMiCozDNKte-5JYSm7SWUeVJ0o87i1iDY1bnWM/edit?gid=1776456574#gid=1776456574",
-        tags: ["google", "sheet", "spreadsheet", "guide"],
+        tags: ["google", "sheet", "spreadsheet", "guide", "en"],
         quick: []
       },
       {
         category: "docs",
-        lang: "neutral",
+        lang: "en",
         name: "Google Doc #2",
         homeUrl: "https://docs.google.com/document/d/15Ihvk2BuhoLbQDNyCPOcvgxSzuj-cL16g8V5ZgM_HeA/edit?tab=t.bdzdrqctyeyd",
-        tags: ["google", "doc", "document", "guide"],
+        tags: ["google", "doc", "document", "guide", "en"],
         quick: []
       },
 
       // =====================
-      // YouTube (à compléter) — neutre par défaut
+      // YouTube (à compléter)
       // =====================
-      // Exemple :
-      // {
-      //   category: "youtube",
-      //   lang: "neutral",
-      //   name: "Chaîne Exemple",
-      //   homeUrl: "https://www.youtube.com/@exemple",
-      //   tags: ["youtube", "videos", "guides"],
-      //   quick: [
-      //     { label: "Playlists", url: "https://www.youtube.com/@exemple/playlists" },
-      //     { label: "Vidéos", url: "https://www.youtube.com/@exemple/videos" },
-      //   ]
-      // },
+      // Ajoute tes chaînes plus tard en mettant lang: "en" ou "jp"
     ];
 
     const content = document.getElementById("content");
@@ -568,7 +574,6 @@
 
     const langEn = document.getElementById("lang-en");
     const langJp = document.getElementById("lang-jp");
-    const langNeutral = document.getElementById("lang-neutral");
     const resetBtn = document.getElementById("reset-filters");
     const filterStatus = document.getElementById("filter-status");
 
@@ -605,29 +610,18 @@
       const active = new Set();
       if (langEn.checked) active.add("en");
       if (langJp.checked) active.add("jp");
-      if (langNeutral.checked) active.add("neutral");
       return active;
     }
 
     function updateFilterStatus(){
       const active = getActiveLangs();
-      if (active.size === 3) {
-        filterStatus.textContent = "Toutes les langues";
-        return;
-      }
-      if (active.size === 0) {
-        filterStatus.textContent = "Aucune langue";
-        return;
-      }
-      const labels = [];
-      if (active.has("en")) labels.push("Anglais");
-      if (active.has("jp")) labels.push("Japonais");
-      if (active.has("neutral")) labels.push("Neutre");
-      filterStatus.textContent = labels.join(" + ");
+      if (active.size === 2) { filterStatus.textContent = "Toutes les langues"; return; }
+      if (active.size === 0) { filterStatus.textContent = "Aucune langue"; return; }
+      filterStatus.textContent = active.has("en") ? "Anglais" : "Japonais";
     }
 
     function langAllowed(item, activeLangs){
-      const lang = (item.lang || "neutral").toLowerCase();
+      const lang = (item.lang || "en").toLowerCase();
       return activeLangs.has(lang);
     }
 
@@ -776,12 +770,10 @@
     q.addEventListener("input", rerender);
     langEn.addEventListener("change", rerender);
     langJp.addEventListener("change", rerender);
-    langNeutral.addEventListener("change", rerender);
 
     resetBtn.addEventListener("click", () => {
       langEn.checked = true;
       langJp.checked = true;
-      langNeutral.checked = true;
       q.value = "";
       rerender();
       q.focus();
